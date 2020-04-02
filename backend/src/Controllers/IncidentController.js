@@ -54,4 +54,17 @@ module.exports = {
 
         return response.status(204).send();
     },
+
+    async update(request, response){
+        const {id, title, description, value} = request.body;
+        const ong_id = request.headers.authorization;
+
+        const a = await connection('incidents').update({
+            title,
+            description,
+            value
+        }).where({ ong_id, id });
+
+        return response.status(204).send();
+    },
 }

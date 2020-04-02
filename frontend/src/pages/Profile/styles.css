@@ -84,3 +84,8 @@
     line-height: 21px;
     font-size: 16px;
 }
+
+.div-buttons {
+    display: flex;
+    align-items: center;
+}
