@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { FiPower, FiTrash2 } from 'react-icons/fi'
+import { FiPower, FiTrash2, FiEdit } from 'react-icons/fi'
 
 import api from '../../services/api';
 
@@ -41,6 +41,12 @@ const [incidents, setIncidents] = useState([]);
         }
     }
 
+    async function handleUpdateIncident(id) {
+        localStorage.setItem('incidentId', id);
+
+        history.push("/incidents/update")
+    }
+
     function handleLogout() {
         localStorage.clear();
 
@@ -64,6 +70,7 @@ const [incidents, setIncidents] = useState([]);
             <ul>
                 { incidents.map(incident => (
                     <li key={incident.id}>
+                    <div className="div-dados">
                     <strong>CASO:</strong>
                     <p>{incident.title}</p>
 
@@ -72,16 +79,17 @@ const [incidents, setIncidents] = useState([]);
 
                     <strong>VALOR</strong>
                     <p>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(incident.value)} </p>
-                    
-                    <view className="div-buttons">
-                        <button onClick={() => {}} type="button">
-                            <FiTrash2 size={20} color="#a8a8b3" />
-                        </button>    
+                    </div>
+                    <div className="div-buttons">
+                        <button onClick={() => handleUpdateIncident(incident.id)} type="button">
+                            <FiEdit size={20} color="#000"/>
+                            {/*<Link className="" to="/incidents/update"><FiEdit size={20} color="#000"/></Link>*/}
+                        </button>                         
 
                         <button onClick={() => handleDeleteIncident(incident.id) } type="button">
-                            <FiTrash2 size={20} color="#a8a8b3" />
+                            <FiTrash2 size={20} color="#000" />
                         </button>
-                    </view>
+                    </div>                    
                 </li>
                 ))}
             </ul>

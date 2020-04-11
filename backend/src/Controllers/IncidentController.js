@@ -1,6 +1,14 @@
 const connection = require('../database/connection')
 
 module.exports = {
+    async indexUnique(request, response) {
+        const { id } = request.params;
+
+        const incidents = await connection('incidents').where('id', id).first();
+        
+        return response.json(incidents);
+    },
+
     async index(request, response) {
         const { page = 1 } = request.query;
 

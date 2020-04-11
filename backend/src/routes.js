@@ -18,8 +18,7 @@ routes.post('/ongs', celebrate({
         email: Joi.string().required().email(),
         whatsapp: Joi.string().required().min(10).max(11),
         city: Joi.string().required(),
-        uf: Joi.string().required().length(2) ,
-
+        uf: Joi.string().required().length(2),
     })
 }), OngController.create);
 
@@ -37,12 +36,22 @@ routes.get('/incidents', celebrate({
     })
 }), IncidentController.index);
 
+routes.get('/incidents/update/:id', IncidentController.indexUnique)
+
 routes.delete('/incidents/:id', celebrate({
     [Segments.PARAMS]: Joi.object().keys({
         id: Joi.number().required(),
     })
 }), IncidentController.delete);
 
-routes.put('/incidents', IncidentController.update);
+routes.put('/incidents', celebrate({
+    [Segments.BODY]: Joi.object().keys({
+        id: Joi.number().required(),
+        title: Joi.string().required(),
+        description: Joi.string().required(),
+        value: Joi.number().required(),
+    })
+}), IncidentController.update);
 
 module.exports = routes;
+
