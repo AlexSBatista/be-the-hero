@@ -65,7 +65,7 @@ const [incidents, setIncidents] = useState([]);
                 </button>
             </header>
 
-            <h1>Casos cadastrador</h1>
+            <h1>Casos cadastrados</h1>
 
             <ul>
                 { incidents.map(incident => (

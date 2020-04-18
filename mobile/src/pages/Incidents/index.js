@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native';
 import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
+
 import api from '../../services/api';
+import { connect, disconnect, subscribeNewIncident } from '../../services/socket';
 
 import logoImg from '../../assets/logo.png';
 
@@ -19,6 +21,11 @@ export default function Incidents() {
     function navigateToDetail(incident) {
         navigation.navigate('Detail', { incident });
     }
+
+    function setupWebsocket() {
+        disconnect();
+        connect();
+    };
 
     async function loadIncidents() {
         if (loading) {
@@ -44,7 +51,12 @@ export default function Incidents() {
 
     useEffect(() => {
         loadIncidents();
+        setupWebsocket();
     }, []);
+
+    useEffect(() => {
+        subscribeNewIncident(incident=> setIncidents([...incidents, ...incident]));
+    }, [incidents])
 
     return (
         <View style={styles.container}>

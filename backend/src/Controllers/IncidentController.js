@@ -1,4 +1,5 @@
 const connection = require('../database/connection')
+const {  getConnections, sendMessage } = require('../websocket');
 
 module.exports = {
     async indexUnique(request, response) {
@@ -35,12 +36,31 @@ module.exports = {
         const { title, description, value } = request.body;
         const ong_id = request.headers.authorization;
 
-      const [id] =  await connection('incidents').insert({
+      const [id]  =  await connection('incidents').insert({
             title,
             description,
             value,
             ong_id
         });
+
+        const incident = await connection('incidents') 
+        .join('ongs', 'ongs.id', '=', 'incidents.ong_id')
+        .where('incidents.id', id)
+        .select(['incidents.*',
+        'ongs.name',
+        'ongs.email',
+        'ongs.whatsapp',
+        'ongs.city',
+        'ongs.uf'
+        ]);
+
+        const sendSocketMessageTo = getConnections();
+
+        console.log('usuarios:');
+        console.log(sendSocketMessageTo);
+        console.log(incident);
+
+        sendMessage(sendSocketMessageTo, 'new-incident', incident);
 
         return response.json({ id });
     },
